@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 
+import java.util.Random;
+
 public class LoginFunction {
     WebDriver driver;
 
@@ -59,12 +61,40 @@ public class LoginFunction {
         Thread.sleep(1000);
         driver.findElement(By.id("email")).sendKeys(email);
         Assert.assertEquals("", email);
+        driver.navigate().back();
+        Thread.sleep(1000);
+        driver.navigate().refresh();
+        Thread.sleep(1000);
 
 
     }
 
     @Then("^User enter account name with more then one hundred 'characters'\\.$")
-    public void user_enter_account_name_with_more_then_one_hundred_characters(String characters) {
+    public void user_enter_account_name_with_more_then_one_hundred_characters() throws InterruptedException {
+        String characters = "abcdefghijklmnopqrstuvwxyz1234567890!@#$%&/()=?*";
+        String randomUsername = "";
+        int length = 100;
+        Random rand = new Random();
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) {
+            text[i] = characters.charAt(rand.nextInt(characters.length()));
+        }
+        for (char c : text) {
+            randomUsername += c;
+            randomUsername.length();
+        }
+        Thread.sleep(1000);
+        driver.findElement(By.id("new_username")).sendKeys(randomUsername);
+        driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
+        Assert.assertEquals(100, randomUsername);
+        if (randomUsername.length() == 100) {
+            System.out.println("Password is 100 characters ");
+        } else if (randomUsername.length() > 100) {
+            System.out.println("password is bigger than 100 characters ");
+        } else {
+            System.out.println("Password is less than 100 characters");
+        }
+
 
     }
 
