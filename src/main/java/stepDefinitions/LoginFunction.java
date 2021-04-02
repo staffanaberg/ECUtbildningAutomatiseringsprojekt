@@ -14,6 +14,7 @@ import java.util.Random;
 
 public class LoginFunction {
     WebDriver driver;
+    String username = "Shagtanagotha";
 
     @Before
     public void init() {
@@ -40,40 +41,65 @@ public class LoginFunction {
 
     @When("^title of the webpage is asserted and User accept cookies$")
     public void title_of_the_webpage_is_asserted_and_User_accept_cookies() {
-
         driver.findElement(By.id("onetrust-accept-btn-handler")).click();
         String title = driver.getTitle();
         System.out.println(title);
         Assert.assertEquals("Signup | Mailchimp", title);
     }
 
-
-    @Then("^User enter no information on the email box\\.$")
-    public void user_enter_no_information_on_the_email_box() throws InterruptedException {
-        Thread.sleep(1500);
-
-        driver.findElement(By.id("new_username")).sendKeys("Shagtanagotha");
+    @Then("^User input the empty-email in the box\\.$")
+    public void user_input_the_empty_email_in_the_box() {
+        driver.findElement(By.id("new_username")).sendKeys(username);
         driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
-        Thread.sleep(1000);
-        driver.findElement(By.id("create-account")).click();
         String email = "";
-        System.out.println(email);
-        Thread.sleep(1000);
         driver.findElement(By.id("email")).sendKeys(email);
         Assert.assertEquals("", email);
-        driver.navigate().back();
+
+    }
+
+    @Then("^User enter Valid_username$")
+    public void user_enter_Valid_username() throws InterruptedException {
+        driver.findElement(By.id("new_username")).sendKeys(username);
         Thread.sleep(1000);
-        driver.navigate().refresh();
-        Thread.sleep(1000);
+
+    }
+
+    @Then("^User click on Sign Up button\\.$")
+    public void user_click_on_Sign_Up_button() {
+        driver.findElement(By.id("create-account")).click();
 
 
     }
 
-    @Then("^User enter account name with more then one hundred 'characters'\\.$")
-    public void user_enter_account_name_with_more_then_one_hundred_characters() throws InterruptedException {
-        String characters = "abcdefghijklmnopqrstuvwxyz1234567890!@#$%&/()=?*";
+    @Then("^It will display a Please enter a value for the user\\.$")
+    public void it_will_display_a_Please_enter_a_value_for_the_user() {
+        Assert.assertEquals("Please enter a value", driver.findElement(By.className("invalid-error")).getText());
+    }
+
+    @Then("^User inputs valid_password\\.$")
+    public void user_inputs_valid_password() throws Throwable {
+        driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
+        Thread.sleep(1000);
+        driver.findElement(By.id("create-account")).click();
+        Thread.sleep(2000);
+
+
+    }
+
+    @Then("^User input the hejsanhopss(\\d+)@gmail\\.com in the box\\.$")
+    public void user_input_the_hejsanhopss_gmail_com_in_the_box(int arg1) throws Throwable {
+        String email = "hejsanhopss10@gmail.com";
+        driver.findElement(By.id("email")).sendKeys(email);
+        Assert.assertEquals("hejsanhopss10@gmail.com", email);
+
+
+    }
+
+    @Then("^User enter randomUsername$")
+    public void user_enter_randomUsername() throws Throwable {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         String randomUsername = "";
-        int length = 100;
+        int length = 150;
         Random rand = new Random();
         char[] text = new char[length];
         for (int i = 0; i < length; i++) {
@@ -86,27 +112,19 @@ public class LoginFunction {
         Thread.sleep(1000);
         driver.findElement(By.id("new_username")).sendKeys(randomUsername);
         driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
-        Assert.assertEquals(100, randomUsername);
-        if (randomUsername.length() == 100) {
-            System.out.println("Password is 100 characters ");
-        } else if (randomUsername.length() > 100) {
-            System.out.println("password is bigger than 100 characters ");
-        } else {
-            System.out.println("Password is less than 100 characters");
-        }
+        Assert.assertEquals(150, randomUsername.length());
 
 
     }
 
-    @Then("^User enter an already busy 'name'\\.$")
-    public void user_enter_an_already_busy_name(String name) {
 
+    @Then("^It will display a Enter a value less than (\\d+) characters long for the user\\.$")
+    public void it_will_display_a_Enter_a_value_less_than_characters_long_for_the_user(int arg1) throws Throwable {
+
+
+        Assert.assertEquals("Enter a value less than 100 characters long", driver.findElement(By.className("invalid-error")).getText());
+
+        driver.findElement(By.id("create-account")).click();
     }
-
-    @Then("^User creates an account with no problems\\.$")
-    public void user_creates_an_account_with_no_problems() {
-
-    }
-
 
 }
