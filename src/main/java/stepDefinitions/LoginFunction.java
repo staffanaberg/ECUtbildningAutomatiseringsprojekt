@@ -24,6 +24,7 @@ public class LoginFunction {
     @After
     public void exit() {
         System.out.println("Exiting the Program");
+        driver.close();
 
     }
 
@@ -100,15 +101,7 @@ public class LoginFunction {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
         String randomUsername = "";
         int length = 150;
-        Random rand = new Random();
-        char[] text = new char[length];
-        for (int i = 0; i < length; i++) {
-            text[i] = characters.charAt(rand.nextInt(characters.length()));
-        }
-        for (char c : text) {
-            randomUsername += c;
-            randomUsername.length();
-        }
+        randomUsername = getString(characters, randomUsername, length);
         Thread.sleep(1000);
         driver.findElement(By.id("new_username")).sendKeys(randomUsername);
         driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
@@ -119,12 +112,66 @@ public class LoginFunction {
 
 
     @Then("^It will display a Enter a value less than (\\d+) characters long for the user\\.$")
-    public void it_will_display_a_Enter_a_value_less_than_characters_long_for_the_user(int arg1) throws Throwable {
+    public void it_will_display_a_Enter_a_value_less_than_characters_long_for_the_user(int arg1) {
 
+        Assert.assertEquals("Enter a value less than 100 characters long",
+                driver.findElement(By.className("invalid-error")).getText());
 
-        Assert.assertEquals("Enter a value less than 100 characters long", driver.findElement(By.className("invalid-error")).getText());
+    }
 
+    @Then("^User enter invalid_username$")
+    public void user_enter_invalid_username() {
+        driver.findElement(By.id("new_username")).sendKeys("Samuel");
+        driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
         driver.findElement(By.id("create-account")).click();
+
+    }
+
+    @Then("^It will display a Another user with this username already exists\\. Maybe it's your evil twin\\. Spooky\\. for the user\\.$")
+    public void it_will_display_a_Another_user_with_this_username_already_exists_Maybe_it_s_your_evil_twin_Spooky_for_the_user() {
+        Assert.assertEquals("Another user with this username already exists. Maybe it's your evil twin. Spooky.",
+                driver.findElement(By.className("invalid-error")).getText());
+    }
+
+    @Then("^User input the valid_email in the box\\.$")
+    public void user_input_the_valid_email_in_the_box() {
+        String validEmail = "halospartan98@gmail.com";
+        Assert.assertEquals("halospartan98@gmail.com", validEmail);
+
+    }
+
+    @Then("^User enter valid_username$")
+    public void user_enter_valid_username() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String randomValidUsername = "";
+        int length = 12;
+        randomValidUsername = getString(characters, randomValidUsername, length);
+        driver.findElement(By.id("new_username")).sendKeys(randomValidUsername);
+        driver.findElement(By.id("new_password")).sendKeys("!Nyarlahotep98");
+        Assert.assertEquals(12, randomValidUsername.length());
+
+
+    }
+
+    private String getString(String characters, String randomValidUsername, int length) {
+        Random rand = new Random();
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++) {
+            text[i] = characters.charAt(rand.nextInt(characters.length()));
+        }
+        for (char c : text) {
+            randomValidUsername += c;
+            randomValidUsername.length();
+        }
+        return randomValidUsername;
+    }
+
+    @Then("^It will display a Success for the user\\.$")
+    public void it_will_display_a_Success_for_the_user() {
+        String title = driver.getTitle();
+        System.out.println(title);
+        Assert.assertEquals("Success", title);
+
     }
 
 }
