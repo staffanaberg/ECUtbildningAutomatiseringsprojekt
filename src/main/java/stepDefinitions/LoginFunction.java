@@ -57,6 +57,12 @@ public class LoginFunction {
         String email = "";
         driver.findElement(By.cssSelector("#email")).sendKeys(email);
         Assert.assertEquals("", email);
+        if (email.isBlank()) {
+            System.out.println("Email is empty that is correct");
+        } else {
+            System.out.println("Email is not empty that is wrong");
+            driver.close();
+        }
 
     }
 
@@ -86,6 +92,12 @@ public class LoginFunction {
     public void user_inputs_valid_password() throws Throwable {
         driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
         Assert.assertEquals("!Nyarlahotep98", password);
+        if (password.isBlank()) {
+            System.out.println("Password was not send to the login page");
+            driver.close();
+        } else {
+            System.out.println("Valid password was sent to the login page.");
+        }
         Thread.sleep(1000);
 
 
@@ -93,11 +105,19 @@ public class LoginFunction {
 
     @Then("^User input the hejsanhopss(\\d+)@gmail\\.com in the box\\.$")
     public void user_input_the_hejsanhopss_gmail_com_in_the_box(int arg1) {
-        String email = "hejsanhopss100@gmail.com";
-        driver.findElement(By.cssSelector("#email")).sendKeys(email);
-        Assert.assertEquals("hejsanhopss100@gmail.com", email);
+        randomCharacters();
 
 
+    }
+
+    private void randomCharacters() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        String randomEmail = "";
+        String email = "@gmail.com";
+        int length = 12;
+        randomEmail = getString(characters, randomEmail, length);
+        driver.findElement(By.cssSelector("#email")).sendKeys(randomEmail + email);
+        Assert.assertEquals(12, randomEmail.length());
     }
 
     @Then("^User enter randomUsername$")
@@ -110,6 +130,11 @@ public class LoginFunction {
         driver.findElement(By.cssSelector("#new_username")).sendKeys(randomUsername);
         driver.findElement(By.cssSelector("#new_password")).sendKeys("!Nyarlahotep98");
         Assert.assertEquals(150, randomUsername.length());
+        if (randomUsername.length() > 99) {
+            System.out.println("Password is 100 characters or more.");
+        } else {
+            System.out.println("Password is less than 100 characters.");
+        }
 
 
     }
@@ -120,6 +145,12 @@ public class LoginFunction {
 
         Assert.assertEquals("Enter a value less than 100 characters long",
                 driver.findElement(By.className("invalid-error")).getText());
+        if (driver.findElement(By.className("invalid-error")).isDisplayed()) {
+            System.out.println("Correct message is displayed");
+        } else {
+            System.out.println("Wrong message is displayed");
+            driver.close();
+        }
 
     }
 
@@ -129,6 +160,12 @@ public class LoginFunction {
         driver.findElement(By.cssSelector("#new_username")).sendKeys(invalidUsername);
         driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
         Assert.assertEquals("Samuel", invalidUsername);
+        if (username.isBlank()) {
+            System.out.println("No username was snd to the login page");
+            driver.close();
+        } else {
+            System.out.println("Busy username was selected");
+        }
 
     }
 
@@ -140,13 +177,7 @@ public class LoginFunction {
 
     @Then("^User input the valid_email in the box\\.$")
     public void user_input_the_valid_email_in_the_box() {
-        String emailCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-        String randomEmail = "";
-        String email = "@gmail.com";
-        int length = 12;
-        randomEmail = getString(emailCharacters, randomEmail, length);
-        driver.findElement(By.cssSelector("#email")).sendKeys(randomEmail + email);
-        Assert.assertEquals(12, randomEmail.length());
+        randomCharacters();
 
     }
 
@@ -184,6 +215,11 @@ public class LoginFunction {
         Thread.sleep(1000);
         System.out.println(title);
         Assert.assertEquals("Success | Mailchimp", title);
+        if (title.equals("Success | Mailchimp")) {
+            System.out.println("You have successfully logged in to MailChimp ");
+        } else {
+            System.out.println("You did not log in to Mailchimp");
+        }
     }
 
 
