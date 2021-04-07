@@ -15,6 +15,7 @@ import java.util.Random;
 public class LoginFunction {
     WebDriver driver;
     String username = "Shagtanagotha";
+    String password = "!Nyarlahotep98";
 
     @Before
     public void init() {
@@ -35,6 +36,8 @@ public class LoginFunction {
         driver = new ChromeDriver();
         driver.get("https://login.mailchimp.com/signup/");
         driver.manage().window().maximize();
+        String browserURL = driver.getCurrentUrl();
+        Assert.assertEquals("https://login.mailchimp.com/signup/", browserURL);
         Thread.sleep(1000);
 
 
@@ -60,6 +63,7 @@ public class LoginFunction {
     @Then("^User enter Valid_username$")
     public void user_enter_Valid_username() throws InterruptedException {
         driver.findElement(By.cssSelector("#new_username")).sendKeys(username);
+        Assert.assertEquals("Shagtanagotha", username);
         Thread.sleep(1000);
 
 
@@ -80,7 +84,8 @@ public class LoginFunction {
 
     @Then("^User inputs valid_password\\.$")
     public void user_inputs_valid_password() throws Throwable {
-        driver.findElement(By.cssSelector("#new_password")).sendKeys("!Nyarlahotep98");
+        driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
+        Assert.assertEquals("!Nyarlahotep98", password);
         Thread.sleep(1000);
 
 
@@ -120,8 +125,10 @@ public class LoginFunction {
 
     @Then("^User enter invalid_username$")
     public void user_enter_invalid_username() {
-        driver.findElement(By.cssSelector("#new_username")).sendKeys("Samuel");
-        driver.findElement(By.cssSelector("#new_password")).sendKeys("!Nyarlahotep98");
+        String invalidUsername = "Samuel";
+        driver.findElement(By.cssSelector("#new_username")).sendKeys(invalidUsername);
+        driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
+        Assert.assertEquals("Samuel", invalidUsername);
 
     }
 
