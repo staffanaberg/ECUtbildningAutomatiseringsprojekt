@@ -78,7 +78,18 @@ public class LoginFunction {
     @Then("^User click on Sign Up button\\.$")
     public void user_click_on_Sign_Up_button() {
 
-        driver.findElement(By.cssSelector("#create-account")).click();
+        if (driver.findElement(By.cssSelector("#create-account")).isDisplayed()) {
+            if (driver.getTitle().equals("Signup | Mailchimp"))
+                driver.findElement(By.cssSelector("#create-account")).click();
+
+            else {
+                System.out.println("You are already logged in.");
+                driver.close();
+            }
+        } else {
+            System.out.println("The button was not clicked");
+            driver.close();
+        }
 
 
     }
@@ -118,6 +129,12 @@ public class LoginFunction {
         randomEmail = getString(characters, randomEmail, length);
         driver.findElement(By.cssSelector("#email")).sendKeys(randomEmail + email);
         Assert.assertEquals(12, randomEmail.length());
+        if (email.isBlank()) {
+            System.out.println("No email was sent");
+            driver.close();
+        } else {
+            System.out.println("Email was sent.");
+        }
     }
 
     @Then("^User enter randomUsername$")
