@@ -15,7 +15,6 @@ import java.util.Random;
 public class LoginFunction {
     WebDriver driver;
     String username = "Shagtanagotha";
-    String validPassword;
 
     @Before
     public void init() {
@@ -36,8 +35,6 @@ public class LoginFunction {
         driver = new ChromeDriver();
         driver.get("https://login.mailchimp.com/signup/");
         driver.manage().window().maximize();
-        String browserURL = driver.getCurrentUrl();
-        Assert.assertEquals("https://login.mailchimp.com/signup/", browserURL);
         Thread.sleep(1000);
 
 
@@ -63,7 +60,6 @@ public class LoginFunction {
     @Then("^User enter Valid_username$")
     public void user_enter_Valid_username() throws InterruptedException {
         driver.findElement(By.cssSelector("#new_username")).sendKeys(username);
-        Assert.assertEquals("Shagtanagotha", username);
         Thread.sleep(1000);
 
 
@@ -71,7 +67,9 @@ public class LoginFunction {
 
     @Then("^User click on Sign Up button\\.$")
     public void user_click_on_Sign_Up_button() {
+
         driver.findElement(By.cssSelector("#create-account")).click();
+
 
     }
 
@@ -82,9 +80,7 @@ public class LoginFunction {
 
     @Then("^User inputs valid_password\\.$")
     public void user_inputs_valid_password() throws Throwable {
-        validPassword = "!Nyarlahotep98";
-        driver.findElement(By.cssSelector("#new_password")).sendKeys(validPassword);
-        Assert.assertEquals("!Nyarlahotep98", validPassword);
+        driver.findElement(By.cssSelector("#new_password")).sendKeys("!Nyarlahotep98");
         Thread.sleep(1000);
 
 
@@ -131,7 +127,6 @@ public class LoginFunction {
 
     @Then("^It will display a Another user with this username already exists\\. Maybe it's your evil twin\\. Spooky\\. for the user\\.$")
     public void it_will_display_a_Another_user_with_this_username_already_exists_Maybe_it_s_your_evil_twin_Spooky_for_the_user() {
-
         Assert.assertEquals("Another user with this username already exists. Maybe it's your evil twin. Spooky.",
                 driver.findElement(By.className("invalid-error")).getText());
     }
@@ -174,6 +169,7 @@ public class LoginFunction {
         return randomValidUsername;
     }
 
+
     @Then("^It will display a Success MailChimp for the user\\.$")
     public void it_will_display_a_Success_MailChimp_for_the_user() throws Throwable {
         Thread.sleep(1000);
@@ -181,7 +177,7 @@ public class LoginFunction {
         Thread.sleep(1000);
         System.out.println(title);
         Assert.assertEquals("Success | Mailchimp", title);
-
     }
+
 
 }
