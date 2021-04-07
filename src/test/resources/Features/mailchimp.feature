@@ -1,6 +1,5 @@
 Feature: In the login function I want to create an account and register as a user in Mailchimp.
 
-
   Scenario Outline: I enter information in login page to enter Mailchimp website.
     Given User is already on the login webpage.
     When title of the webpage is asserted and User accept cookies
@@ -15,7 +14,7 @@ Feature: In the login function I want to create an account and register as a use
       | empty-email | Valid_username   | valid_password | Please enter a value                                                               |
       | valid_email | randomUsername   | valid_password | Enter a value less than 100 characters long                                        |
       | valid_email | invalid_username | valid_password | Another user with this username already exists. Maybe it's your evil twin. Spooky. |
-      | valid_email | valid_username   | valid_password | Success                                                                            |
+      | valid_email | valid_username   | valid_password | Success MailChimp                                                                  |
 
 
 
