@@ -7,15 +7,20 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.util.Random;
 
 public class LoginFunction {
-    WebDriver driver;
-    String username = "Shagtanagotha";
-    String password = "!Nyarlahotep98";
+   private WebDriver driver;
+   private final String username = "Shagtanagotha";
+   private final String password = "!Nyarlahotep98";
+    private WebDriverWait wait;
+    private WebElement element;
 
     @Before
     public void init() {
@@ -31,20 +36,21 @@ public class LoginFunction {
 
 
     @Given("^User is already on the login webpage\\.$")
-    public void user_is_already_on_the_login_webpage() throws InterruptedException {
+    public void user_is_already_on_the_login_webpage()  {
         System.setProperty("webdriver,chrome,driver", "chromedriver.exe");
         driver = new ChromeDriver();
         driver.get("https://login.mailchimp.com/signup/");
         driver.manage().window().maximize();
         String browserURL = driver.getCurrentUrl();
         Assert.assertEquals("https://login.mailchimp.com/signup/", browserURL);
-        Thread.sleep(1000);
 
 
     }
 
     @When("^title of the webpage is asserted and User accept cookies$")
     public void title_of_the_webpage_is_asserted_and_User_accept_cookies() {
+        wait = new WebDriverWait(driver, 20);
+        element = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#onetrust-accept-btn-handler")));
         driver.findElement(By.cssSelector("#onetrust-accept-btn-handler")).click();
         String title = driver.getTitle();
         System.out.println(title);
@@ -67,16 +73,19 @@ public class LoginFunction {
     }
 
     @Then("^User enter Valid_username$")
-    public void user_enter_Valid_username() throws InterruptedException {
+    public void user_enter_Valid_username() {
+        wait = new WebDriverWait(driver, 20);
+        element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#new_username")));
         driver.findElement(By.cssSelector("#new_username")).sendKeys(username);
         Assert.assertEquals("Shagtanagotha", username);
-        Thread.sleep(1000);
 
 
     }
 
     @Then("^User click on Sign Up button\\.$")
     public void user_click_on_Sign_Up_button() {
+         wait = new WebDriverWait(driver, 20);
+        element = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#create-account")));
 
         if (driver.findElement(By.cssSelector("#create-account")).isDisplayed()) {
             if (driver.getTitle().equals("Signup | Mailchimp"))
@@ -101,6 +110,8 @@ public class LoginFunction {
 
     @Then("^User inputs valid_password\\.$")
     public void user_inputs_valid_password() throws Throwable {
+        wait = new WebDriverWait(driver, 20);
+       element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#new_password")));
         driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
         Assert.assertEquals("!Nyarlahotep98", password);
         if (password.isBlank()) {
@@ -109,13 +120,13 @@ public class LoginFunction {
         } else {
             System.out.println("Valid password was sent to the login page.");
         }
-        Thread.sleep(1000);
 
 
     }
 
     @Then("^User input the hejsanhopss(\\d+)@gmail\\.com in the box\\.$")
     public void user_input_the_hejsanhopss_gmail_com_in_the_box(int arg1) {
+        // Call a method that makes a random email
         randomCharacters();
 
 
@@ -138,12 +149,11 @@ public class LoginFunction {
     }
 
     @Then("^User enter randomUsername$")
-    public void user_enter_randomUsername() throws Throwable {
+    public void user_enter_randomUsername() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         String randomUsername = "";
         int length = 150;
         randomUsername = getString(characters, randomUsername, length);
-        Thread.sleep(1000);
         driver.findElement(By.cssSelector("#new_username")).sendKeys(randomUsername);
         driver.findElement(By.cssSelector("#new_password")).sendKeys("!Nyarlahotep98");
         Assert.assertEquals(150, randomUsername.length());
@@ -226,10 +236,10 @@ public class LoginFunction {
 
 
     @Then("^It will display a Success MailChimp for the user\\.$")
-    public void it_will_display_a_Success_MailChimp_for_the_user() throws Throwable {
-        Thread.sleep(1000);
+    public void it_will_display_a_Success_MailChimp_for_the_user() {
+         wait = new WebDriverWait(driver, 20);
+        Boolean element = wait.until(ExpectedConditions.titleIs(driver.getTitle()));
         String title = driver.getTitle();
-        Thread.sleep(1000);
         System.out.println(title);
         Assert.assertEquals("Success | Mailchimp", title);
         if (title.equals("Success | Mailchimp")) {
