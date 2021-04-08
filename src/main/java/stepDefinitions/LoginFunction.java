@@ -200,6 +200,7 @@ public class LoginFunction {
     @Then("^User input the valid_email in the box\\.$")
     public void user_input_the_valid_email_in_the_box() {
         // Method to make an E-mail random
+
         randomCharacters();
 
     }
