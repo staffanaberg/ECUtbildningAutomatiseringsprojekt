@@ -41,6 +41,7 @@ public class LoginFunction {
 
     @Given("^User is already on the login webpage\\.$")
     public void user_is_already_on_the_login_webpage() {
+        // Get the browser url and assert it is the same MailChimp Login page
         String browserURL = driver.getCurrentUrl();
         Assert.assertEquals("https://login.mailchimp.com/signup/", browserURL);
     }
@@ -49,16 +50,25 @@ public class LoginFunction {
     public void title_of_the_webpage_is_asserted_and_User_accept_cookies() {
         wait = new WebDriverWait(driver, 20);
         element = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#onetrust-accept-btn-handler")));
+        // accept cookies
         driver.findElement(By.cssSelector("#onetrust-accept-btn-handler")).click();
         String title = driver.getTitle();
         System.out.println(title);
+        // assert if the the title is correct
         Assert.assertEquals("Signup | Mailchimp", title);
+        if (title.equals("Signup | Mailchimp")) {
+            System.out.println("The title is " + title + "\nThat is correct");
+        } else {
+            System.out.println("The title is wrong you are not on the same webpage");
+            driver.close();
+        }
 
     }
 
     @Then("^User input the empty-email in the box\\.$")
     public void user_input_the_empty_email_in_the_box() {
         String email = "";
+        // Send an empty string E-mail
         driver.findElement(By.cssSelector("#email")).sendKeys(email);
         Assert.assertEquals("", email);
         if (email.isBlank()) {
@@ -86,10 +96,15 @@ public class LoginFunction {
         element = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#create-account")));
 
         if (driver.findElement(By.cssSelector("#create-account")).isDisplayed()) {
+            /*
+             When title of the page is Signup | Mailchimp,
+              you should be able to click on sign in button
+             */
             if (driver.getTitle().equals("Signup | Mailchimp"))
                 driver.findElement(By.cssSelector("#create-account")).click();
 
             else {
+                // When you are already logged in computer should not press sign in button again
                 System.out.println("You are already logged in.");
                 driver.close();
             }
@@ -103,6 +118,7 @@ public class LoginFunction {
 
     @Then("^It will display a Please enter a value for the user\\.$")
     public void it_will_display_a_Please_enter_a_value_for_the_user() {
+        // Assert that you get the correct error message.
         Assert.assertEquals("Please enter a value", driver.findElement(By.className("invalid-error")).getText());
     }
 
@@ -131,7 +147,9 @@ public class LoginFunction {
     private void randomCharacters() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         String randomEmail = "";
+        // I want the random email to end with @gmail.com to get a correct Email-format
         String email = "@gmail.com";
+        // length of the email should be 12 letters
         int length = 12;
         randomEmail = getString(characters, randomEmail, length);
         driver.findElement(By.cssSelector("#email")).sendKeys(randomEmail + email);
@@ -148,6 +166,7 @@ public class LoginFunction {
     public void user_enter_randomUsername() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         String randomUsername = "";
+        // length of the username is 150 letters
         int length = 150;
         randomUsername = getString(characters, randomUsername, length);
         driver.findElement(By.cssSelector("#new_username")).sendKeys(randomUsername);
@@ -178,6 +197,7 @@ public class LoginFunction {
 
     @Then("^User enter invalid_username$")
     public void user_enter_invalid_username() {
+        // I choose popular usernames like real names to get an already existing username.
         String invalidUsername = "Samuel";
         driver.findElement(By.cssSelector("#new_username")).sendKeys(invalidUsername);
         driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
@@ -191,16 +211,16 @@ public class LoginFunction {
 
     }
 
-    @Then("^It will display a Another user with this username already exists\\. Maybe it's your evil twin\\. Spooky\\. for the user\\.$")
-    public void it_will_display_a_Another_user_with_this_username_already_exists_Maybe_it_s_your_evil_twin_Spooky_for_the_user() {
-        Assert.assertEquals("Another user with this username already exists. Maybe it's your evil twin. Spooky.",
-                driver.findElement(By.className("invalid-error")).getText());
+    @Then("^It will display a Another user with this username already exists\\. " +
+            "Maybe it's your evil twin\\. Spooky\\. for the user\\.$")
+    public void it_will_display_a_Another_user_with_this_username_already_exists() {
+        Assert.assertEquals("Another user with this username already exists. Maybe it's your evil twin. Spooky."
+                , driver.findElement(By.className("invalid-error")).getText());
     }
 
     @Then("^User input the valid_email in the box\\.$")
     public void user_input_the_valid_email_in_the_box() {
         // Method to make an E-mail random
-
         randomCharacters();
 
     }
@@ -218,6 +238,7 @@ public class LoginFunction {
 
     }
 
+    // Method to make a random username
     private String getString(String characters, String randomValidUsername, int length) {
         Random rand = new Random();
         char[] text = new char[length];
@@ -237,6 +258,7 @@ public class LoginFunction {
         String title = driver.getTitle();
         System.out.println(title);
         Assert.assertEquals("Success | Mailchimp", title);
+        // To make sure you signed in to the webpage.
         if (title.equals("Success | Mailchimp")) {
             System.out.println("You have successfully logged in to MailChimp ");
         } else {
