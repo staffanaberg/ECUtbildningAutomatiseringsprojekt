@@ -16,14 +16,18 @@ import org.testng.Assert;
 import java.util.Random;
 
 public class LoginFunction {
-   private WebDriver driver;
-   private final String username = "Shagtanagotha";
-   private final String password = "!Nyarlahotep98";
+    private WebDriver driver;
+    private final String username = "Shagtanagotha";
+    private final String password = "!Nyarlahotep98";
     private WebDriverWait wait;
-    private WebElement element;
+    public WebElement element;
 
     @Before
     public void init() {
+        System.setProperty("webdriver,chrome,driver", "chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.get("https://login.mailchimp.com/signup/");
+        driver.manage().window().maximize();
         System.out.println("Starting the Program");
     }
 
@@ -36,15 +40,9 @@ public class LoginFunction {
 
 
     @Given("^User is already on the login webpage\\.$")
-    public void user_is_already_on_the_login_webpage()  {
-        System.setProperty("webdriver,chrome,driver", "chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.get("https://login.mailchimp.com/signup/");
-        driver.manage().window().maximize();
+    public void user_is_already_on_the_login_webpage() {
         String browserURL = driver.getCurrentUrl();
         Assert.assertEquals("https://login.mailchimp.com/signup/", browserURL);
-
-
     }
 
     @When("^title of the webpage is asserted and User accept cookies$")
@@ -84,7 +82,7 @@ public class LoginFunction {
 
     @Then("^User click on Sign Up button\\.$")
     public void user_click_on_Sign_Up_button() {
-         wait = new WebDriverWait(driver, 20);
+        wait = new WebDriverWait(driver, 20);
         element = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#create-account")));
 
         if (driver.findElement(By.cssSelector("#create-account")).isDisplayed()) {
@@ -109,9 +107,7 @@ public class LoginFunction {
     }
 
     @Then("^User inputs valid_password\\.$")
-    public void user_inputs_valid_password() throws Throwable {
-        wait = new WebDriverWait(driver, 20);
-       element = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#new_password")));
+    public void user_inputs_valid_password() {
         driver.findElement(By.cssSelector("#new_password")).sendKeys(password);
         Assert.assertEquals("!Nyarlahotep98", password);
         if (password.isBlank()) {
@@ -124,8 +120,8 @@ public class LoginFunction {
 
     }
 
-    @Then("^User input the hejsanhopss(\\d+)@gmail\\.com in the box\\.$")
-    public void user_input_the_hejsanhopss_gmail_com_in_the_box(int arg1) {
+    @Then("^User input valid_email$")
+    public void user_input_random_email() {
         // Call a method that makes a random email
         randomCharacters();
 
@@ -166,18 +162,17 @@ public class LoginFunction {
 
     }
 
-
-    @Then("^It will display a Enter a value less than (\\d+) characters long for the user\\.$")
-    public void it_will_display_a_Enter_a_value_less_than_characters_long_for_the_user(int arg1) {
-
+    @Then("^It will display a Enter a value less than one hundred characters long for the user\\.$")
+    public void it_will_display_a_Enter_a_value_less_than_one_hundred_characters_long_for_the_user() {
         Assert.assertEquals("Enter a value less than 100 characters long",
                 driver.findElement(By.className("invalid-error")).getText());
         if (driver.findElement(By.className("invalid-error")).isDisplayed()) {
-            System.out.println("Correct message is displayed");
+            System.out.println("Correct message is displayed\nUsername cannot be 100 characters or over");
         } else {
-            System.out.println("Wrong message is displayed");
+            System.out.println("Wrong message is displayed\nUser should be expected a error message");
             driver.close();
         }
+
 
     }
 
@@ -204,6 +199,7 @@ public class LoginFunction {
 
     @Then("^User input the valid_email in the box\\.$")
     public void user_input_the_valid_email_in_the_box() {
+        // Method to make an E-mail random
         randomCharacters();
 
     }
@@ -237,8 +233,6 @@ public class LoginFunction {
 
     @Then("^It will display a Success MailChimp for the user\\.$")
     public void it_will_display_a_Success_MailChimp_for_the_user() {
-         wait = new WebDriverWait(driver, 20);
-        Boolean element = wait.until(ExpectedConditions.titleIs(driver.getTitle()));
         String title = driver.getTitle();
         System.out.println(title);
         Assert.assertEquals("Success | Mailchimp", title);

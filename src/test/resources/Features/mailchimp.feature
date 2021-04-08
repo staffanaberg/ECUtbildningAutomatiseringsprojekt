@@ -12,7 +12,7 @@ Feature: In the login function I want to create an account and register as a use
     Examples:
       | email       | username         | password       | message                                                                            |
       | empty-email | Valid_username   | valid_password | Please enter a value                                                               |
-      | valid_email | randomUsername   | valid_password | Enter a value less than 100 characters long                                        |
+      | valid_email | randomUsername   | valid_password | Enter a value less than one hundred characters long                                |
       | valid_email | invalid_username | valid_password | Another user with this username already exists. Maybe it's your evil twin. Spooky. |
       | valid_email | valid_username   | valid_password | Success MailChimp                                                                  |
 
